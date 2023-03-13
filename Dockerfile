@@ -1,17 +1,21 @@
-# base image  
-FROM python:3.10-slim 
-# setup environment variable  
+FROM python:3.10-slim
+
+ARG PIP_REQUIREMENTS=requirements.txt
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install dependencies
+RUN pip install --upgrade pip setuptools
+
 ENV DockerHOME=/home/app/webapp  
 
 # set work directory  
 RUN mkdir -p $DockerHOME  
 
 # where your code lives  
-WORKDIR $DockerHOME  
-
-# set environment variables  
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1  
+WORKDIR $DockerHOME
 
 # install dependencies  
 RUN pip install --upgrade pip  
