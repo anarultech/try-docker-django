@@ -9,22 +9,16 @@ ENV PYTHONUNBUFFERED 1
 # install dependencies
 RUN pip install --upgrade pip setuptools
 
-ENV DockerHOME=/home/app/webapp  
+RUN useradd -ms /bin/bash trydockerdj
 
-# set work directory  
-RUN mkdir -p $DockerHOME  
+USER trydockerdj
 
-# where your code lives  
-WORKDIR $DockerHOME
+WORKDIR /home/trydockerdj
 
-# install dependencies  
-RUN pip install --upgrade pip  
+RUN python3 -v venv venv
 
-# copy whole project to your docker home directory. 
-COPY . $DockerHOME  
-# run this command to install all dependencies  
-RUN pip install -r requirements.txt  
-# port where the Django app runs  
-EXPOSE 8000  
-# start server  
-CMD python manage.py runserver  
+
+COPY --chown=trydockerdj ./src/trydockerdj/requirements.txt /home/trydockerdj/requirements/
+RUN ./venv/bin/pip3 install -r /home/trydockerdj/requirements/${PIP_REQUIREMENTS}
+
+COPY --chown=trydockerdj ./src/trydockerdj /home/trydockerdj/
